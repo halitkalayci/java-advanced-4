@@ -17,7 +17,6 @@ paths:
       tags: [ProductsV2]
       summary: List products
       operationId: listProducts
-      deprecated: true
       security: []
       parameters:
         - name: page
@@ -62,7 +61,7 @@ paths:
       tags: [ProductsV2]
       summary: Create product
       operationId: createProduct
-      deprecated: true
+      
       security:
         - bearerAuth: []
       requestBody:
@@ -101,7 +100,7 @@ paths:
       tags: [ProductsV2]
       summary: Get product by id
       operationId: getProductById
-      deprecated: true
+      
       security: []
       parameters:
         - name: id
@@ -128,7 +127,7 @@ paths:
       tags: [ProductsV2]
       summary: Replace product by id
       operationId: replaceProduct
-      deprecated: true
+      
       security:
         - bearerAuth: []
       parameters:
@@ -174,7 +173,7 @@ paths:
       tags: [ProductsV2]
       summary: Delete product by id
       operationId: deleteProduct
-      deprecated: true
+      
       security:
         - bearerAuth: []
       parameters:
@@ -199,7 +198,7 @@ paths:
       tags: [ProductsV2]
       summary: Update product stock
       operationId: updateStock
-      deprecated: true
+      
       security:
         - bearerAuth: []
       requestBody:
