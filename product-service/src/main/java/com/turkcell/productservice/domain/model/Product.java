@@ -1,5 +1,6 @@
 package com.turkcell.productservice.domain.model;
 
+import com.turkcell.productservice.domain.vo.Money;
 import com.turkcell.productservice.domain.vo.ProductId;
 
 import java.math.BigDecimal;
@@ -21,6 +22,8 @@ public class Product
     private ProductId id; // immutable
     private String name;
     private boolean active;
+    private Money money;
+    // Money, Stok Kodu
 
 
     private Product(ProductId id,String name, boolean active) {
