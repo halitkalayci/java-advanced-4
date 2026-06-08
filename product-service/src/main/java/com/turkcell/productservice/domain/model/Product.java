@@ -22,21 +22,22 @@ public class Product
     private ProductId id; // immutable
     private String name;
     private boolean active;
-    private Money money;
+    private Money price;
     // Money, Stok Kodu
 
 
-    private Product(ProductId id,String name, boolean active) {
+    private Product(ProductId id,String name, boolean active, Money price) {
         this.id = id;
         this.name=name;
         this.active=active;
+        this.price = price;
     }
 
     // Factory Method(lar)
-    public static Product create(String name)
+    public static Product create(String name, Money price)
     {
         requireValidName(name);
-        return new Product(ProductId.generate() ,name, true);
+        return new Product(ProductId.generate() ,name, true, price);
     }
 
     private static void requireValidName(String name)
