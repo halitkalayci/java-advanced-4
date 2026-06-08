@@ -54,6 +54,7 @@
                             <generatorName>spring</generatorName>
                             <configOptions>
                                 <interfaceOnly>true</interfaceOnly>
+                                <useTags>true</useTags>
                             </configOptions>
                             <apiPackage>com.turkcell.api</apiPackage>
                             <modelPackage>com.turkcell.model</modelPackage>
