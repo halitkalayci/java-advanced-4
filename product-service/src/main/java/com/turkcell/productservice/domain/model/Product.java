@@ -3,9 +3,6 @@ package com.turkcell.productservice.domain.model;
 import com.turkcell.productservice.domain.vo.Money;
 import com.turkcell.productservice.domain.vo.ProductId;
 
-import java.math.BigDecimal;
-import java.util.Objects;
-
 /**
  * Product - Bir entity
  * POJO => Plain old java object
@@ -54,4 +51,7 @@ public class Product
 
     public boolean isActive() { return active; }
 
+    public ProductId id() { return id; }
+
+    public Money price() { return price; }
 }
