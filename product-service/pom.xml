@@ -48,6 +48,7 @@
                 <version>7.22.0</version>
                 <executions>
                     <execution>
+                        <id>generate-v1</id>
                         <goals><goal>generate</goal></goals>
                         <configuration>
                             <inputSpec>${project.basedir}/src/main/resources/openapi/product-api-v1.yaml</inputSpec>
@@ -56,8 +57,23 @@
                                 <interfaceOnly>true</interfaceOnly>
                                 <useTags>true</useTags>
                             </configOptions>
-                            <apiPackage>com.turkcell.api</apiPackage>
-                            <modelPackage>com.turkcell.model</modelPackage>
+                            <apiPackage>com.turkcell.v1.api</apiPackage>
+                            <modelPackage>com.turkcell.v1.model</modelPackage>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>generate-v2</id>
+                        <goals><goal>generate</goal></goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/openapi/product-api-v2.yaml</inputSpec>
+                            <generatorName>spring</generatorName>
+                            <configOptions>
+                                <interfaceOnly>true</interfaceOnly>
+                                <useTags>true</useTags>
+                            </configOptions>
+                            <apiPackage>com.turkcell.v2.api</apiPackage>
+                            <modelPackage>com.turkcell.v2.model</modelPackage>
                         </configuration>
                     </execution>
                 </executions>
