@@ -14,7 +14,7 @@
     <description>SmartOrder Multi-Module Parent POM</description>
 
     <modules>
-        <module>demo</module>
+        <module>product-service</module>
     </modules>
 
     <properties>
