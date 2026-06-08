@@ -1,5 +1,8 @@
 package com.turkcell.productservice.domain.model;
 
+import com.turkcell.productservice.domain.vo.ProductId;
+
+import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
@@ -15,10 +18,13 @@ import java.util.Objects;
 */
 public class Product
 {
+    private ProductId id; // immutable
     private String name;
     private boolean active;
 
-    private Product(String name, boolean active) {
+
+    private Product(ProductId id,String name, boolean active) {
+        this.id = id;
         this.name=name;
         this.active=active;
     }
@@ -27,7 +33,7 @@ public class Product
     public static Product create(String name)
     {
         requireValidName(name);
-        return new Product(name, true);
+        return new Product(ProductId.generate() ,name, true);
     }
 
     private static void requireValidName(String name)
