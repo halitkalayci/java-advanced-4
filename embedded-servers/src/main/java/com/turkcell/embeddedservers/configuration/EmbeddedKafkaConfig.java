@@ -7,13 +7,10 @@ import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.kafka.test.EmbeddedKafkaBroker;
 import org.springframework.kafka.test.EmbeddedKafkaKraftBroker;
 
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 @Configuration
 public class EmbeddedKafkaConfig {
-    private static final String[] TOPICS = {"orders","payments"};
 
     @Bean(destroyMethod = "destroy")
     public EmbeddedKafkaKraftBroker embeddedKafkaBroker(ConfigurableEnvironment env) {
@@ -21,27 +18,13 @@ public class EmbeddedKafkaConfig {
         System.setProperty("user.language", "en");
         System.setProperty("user.country", "US");
 
-        Map<String, String> props = new HashMap<>();
-
-        // Client ve controller için ayrı listener’lar + sabit portlar
-        props.put("listeners",
-                "EXTERNAL://127.0.0.1:29023,CONTROLLER://127.0.0.1:29024");
-        props.put("advertised.listeners", "EXTERNAL://127.0.0.1:29023");
-
-        // Listener → security protocol eşlemesi (kritik)
-        props.put("listener.security.protocol.map",
-                "EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT");
-
-        // Hangi listener broker içi trafik için kullanılacak?
-        props.put("inter.broker.listener.name", "EXTERNAL");
-
-        // Controller hangi listener’ı dinliyor?
-        props.put("controller.listener.names", "CONTROLLER");
-
+        // EmbeddedKafkaKraftBroker listener'ları (PLAINTEXT + CONTROLLER) kendi içinde
+        // KafkaClusterTestKit ile yönetir. Portu elle "listeners" property'siyle sabitlemek
+        // çalışmaz; testkit kendi değerini üretip onu ezer ve broker rastgele porta bağlanır.
+        // Doğru yol: kafkaPorts(...) ile portu sabitlemek.
         EmbeddedKafkaKraftBroker broker =
-                (EmbeddedKafkaKraftBroker) new EmbeddedKafkaKraftBroker(1, 1,  "payments")
-                        // .kafkaPorts(29023) // İsteğe bağlı: artık gerekmez; portu listeners ile sabitledik
-                        .brokerProperties(props);
+                new EmbeddedKafkaKraftBroker(1, 1, "orders", "payments")
+                        .kafkaPorts(29023);
 
         broker.afterPropertiesSet();
 

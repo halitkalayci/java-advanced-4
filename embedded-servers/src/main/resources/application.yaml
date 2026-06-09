@@ -3,4 +3,8 @@ spring:
     name: embedded-servers
 
 server:
-  port=0
+  port: 0
+
+logging:
+  level:
+    org.apache.kafka.clients.admin.internals.AdminMetadataManager: WARN
