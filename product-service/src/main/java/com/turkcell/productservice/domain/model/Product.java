@@ -3,6 +3,8 @@ package com.turkcell.productservice.domain.model;
 import com.turkcell.productservice.domain.vo.Money;
 import com.turkcell.productservice.domain.vo.ProductId;
 
+import java.util.Objects;
+
 /**
  * Product - Bir entity
  * POJO => Plain old java object
@@ -32,10 +34,20 @@ public class Product
     }
 
     // Factory Method(lar)
+    // 0'dan yeni bir nesne üretmek.
     public static Product create(String name, Money price)
     {
         requireValidName(name);
         return new Product(ProductId.generate() ,name, true, price);
+    }
+
+    // Reconstitution Factory Method -> Var olan bir veriden bu nesneyi üretmek
+    public static Product reconstitute(ProductId id, String name, boolean active, Money price)
+    {
+        requireValidName(name);
+        Objects.requireNonNull(id, "ProductID null olamaz");
+        Objects.requireNonNull(price, "Fiyat null olamaz");
+        return new Product(id,name,active,price);
     }
 
     private static void requireValidName(String name)

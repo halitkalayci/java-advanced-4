@@ -39,7 +39,7 @@ public class ProductPersistenceAdapter implements ProductRepository {
 
     @Override
     public List<Product> findAll() {
-        return List.of();
+        return jpaRepo.findAll().stream().map(this::toDomain).toList();
     }
 
     @Override
@@ -61,8 +61,10 @@ public class ProductPersistenceAdapter implements ProductRepository {
 
     private Product toDomain(ProductJpaEntity entity)
     {
-        return Product.create(
+        return Product.reconstitute(
+                ProductId.of(entity.id().toString()),
                 entity.name(),
+                entity.active(),
                 Money.of(entity.priceAmount().toString(), entity.priceCurrency())
         );
     }
