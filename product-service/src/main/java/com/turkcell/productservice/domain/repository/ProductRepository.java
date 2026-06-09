@@ -21,4 +21,6 @@ public interface ProductRepository {
     Optional<Product> findByName(String name);
 
     List<Product> findAll();
+
+    boolean existsByName(String name);
 }

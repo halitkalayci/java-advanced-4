@@ -40,6 +40,11 @@ public class ProductPersistenceAdapter implements ProductRepository {
         return List.of();
     }
 
+    @Override
+    public boolean existsByName(String name) {
+        return jpaRepo.existsByName(name);
+    }
+
 
     private ProductJpaEntity toEntity(Product product)
     {

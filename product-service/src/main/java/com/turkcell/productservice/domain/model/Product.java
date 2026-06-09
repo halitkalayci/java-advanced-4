@@ -16,6 +16,7 @@ import com.turkcell.productservice.domain.vo.ProductId;
 */
 public class Product
 {
+
     private ProductId id; // immutable
     private String name;
     private boolean active;
