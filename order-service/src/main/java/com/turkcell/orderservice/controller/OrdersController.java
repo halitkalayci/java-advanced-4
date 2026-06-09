@@ -39,6 +39,7 @@ public class OrdersController {
         orderRepository.save(order);
 
         OrderCreatedEvent orderCreatedEvent = new OrderCreatedEvent(
+                UUID.randomUUID(),
                 order.id(),
                 order.orderDate(),
                 order.totalAmount()
@@ -49,7 +50,7 @@ public class OrdersController {
         outboxMessage.setAggregateType(Order.class.getSimpleName());
         outboxMessage.setAggregateId(order.id().toString());
         outboxMessage.setCreatedAt(Instant.now());
-        outboxMessage.setEventType(OrderCreatedEvent.class.getSimpleName());
+        outboxMessage.setEventType("orderCreatedEvent");
         outboxMessage.setPayload(objectMapper.writeValueAsString(orderCreatedEvent));
         outboxMessage.setOutboxStatus(OutboxStatus.PENDING);
 

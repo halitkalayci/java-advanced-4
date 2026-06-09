@@ -4,4 +4,4 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
-public record OrderCreatedEvent(UUID id, Instant orderDate, BigDecimal totalAmount) { }
+public record OrderCreatedEvent(UUID eventId, UUID id, Instant orderDate, BigDecimal totalAmount) { }

@@ -18,7 +18,7 @@ spring:
           content-type: application/json
       kafka:
         binder:
-          brokers: 127.0.0.1:29023
+          brokers: localhost:9094
         bindings:
           orderCreatedEvent-out-0:
             producer:

@@ -10,3 +10,24 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  cloud:
+    function:
+      definition: orderCreatedEvent
+    stream:
+      bindings:
+        orderCreatedEvent-in-0:
+          destination: order-topic
+          content-type: application/json
+          group: product-group
+          consumer:
+            max-attempts: 5
+            back-off-initial-interval: 1000
+            back-off-multiplier: 2.0
+            back-off-max-interval: 30000
+      kafka:
+        binder:
+          brokers: localhost:9094
+        bindings:
+          orderCreatedEvent-in-0:
+            consumer:
+              enable-dlq: true
