@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 
+
+// ProductRepository portunu JPA'a çevir.
 @Component
 public class ProductPersistenceAdapter implements ProductRepository {
     private final SpringDataProductRepository jpaRepo;

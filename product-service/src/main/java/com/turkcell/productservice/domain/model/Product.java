@@ -47,6 +47,10 @@ public class Product
             throw new IllegalArgumentException("Ürün adı 200 karakterden uzun olamaz.");
     }
 
+    public Money priceWithDiscount(DiscountPolicy policy)
+    {
+        return policy.discountFor(this.price);
+    }
 
     public String name() { return name; }
 
