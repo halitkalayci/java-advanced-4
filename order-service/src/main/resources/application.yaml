@@ -18,6 +18,10 @@ spring:
           content-type: application/json
       kafka:
         binder:
-          brokers: localhost:29023
+          brokers: 127.0.0.1:29023
+        bindings:
+          orderCreatedEvent-out-0:
+            producer:
+              sync: true # mesaj gönderim işleminin senkron olmasını sağlar. Kafka streambridge.send() ok-error verene kadar bekler.
 server:
   port: 8081
