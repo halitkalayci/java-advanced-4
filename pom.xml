@@ -15,6 +15,7 @@
 
     <modules>
         <module>product-service</module>
+        <module>embedded-servers</module>
     </modules>
 
     <properties>
