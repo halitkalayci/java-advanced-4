@@ -3,6 +3,7 @@ package com.turkcell.orderservice.controller;
 import com.turkcell.orderservice.entity.Order;
 import com.turkcell.orderservice.entity.OutboxMessage;
 import com.turkcell.orderservice.entity.OutboxStatus;
+import com.turkcell.orderservice.event.OrderCreatedEvent;
 import com.turkcell.orderservice.repository.OrderRepository;
 import com.turkcell.orderservice.repository.OutboxMessageRepository;
 import org.aspectj.weaver.ast.Or;
@@ -37,13 +38,19 @@ public class OrdersController {
         order.setTotalAmount(BigDecimal.valueOf(1203));
         orderRepository.save(order);
 
+        OrderCreatedEvent orderCreatedEvent = new OrderCreatedEvent(
+                order.id(),
+                order.orderDate(),
+                order.totalAmount()
+        );
+
         OutboxMessage outboxMessage = new OutboxMessage();
         outboxMessage.setId(UUID.randomUUID());
-        outboxMessage.setAggregateType("ORDER");
+        outboxMessage.setAggregateType(Order.class.getSimpleName());
         outboxMessage.setAggregateId(order.id().toString());
         outboxMessage.setCreatedAt(Instant.now());
-        outboxMessage.setEventType("OrderCreatedEvent");
-        outboxMessage.setPayload(objectMapper.writeValueAsString(order));
+        outboxMessage.setEventType(OrderCreatedEvent.class.getSimpleName());
+        outboxMessage.setPayload(objectMapper.writeValueAsString(orderCreatedEvent));
         outboxMessage.setOutboxStatus(OutboxStatus.PENDING);
 
         outboxMessageRepository.save(outboxMessage);

@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public interface OutboxMessageRepository extends JpaRepository<OutboxMessage, UUID> {
     @Query(value = """
-                    Select * from outbox_messages where status = 'PENDING' and retry_count < 5
+                    Select * from outbox_messages where outbox_status = 'PENDING' and retry_count < 5
                     ORDER BY created_at
                     LIMIT :limit
                     """, nativeQuery = true)
