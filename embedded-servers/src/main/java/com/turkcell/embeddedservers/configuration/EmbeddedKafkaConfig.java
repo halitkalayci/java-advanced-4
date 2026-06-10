@@ -4,7 +4,6 @@ package com.turkcell.embeddedservers.configuration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.kafka.test.EmbeddedKafkaBroker;
 import org.springframework.kafka.test.EmbeddedKafkaKraftBroker;
 
 import java.util.Locale;
@@ -18,33 +17,25 @@ public class EmbeddedKafkaConfig {
         System.setProperty("user.language", "en");
         System.setProperty("user.country", "US");
 
-        // EmbeddedKafkaKraftBroker listener'ları (PLAINTEXT + CONTROLLER) kendi içinde
-        // KafkaClusterTestKit ile yönetir. Portu elle "listeners" property'siyle sabitlemek
-        // çalışmaz; testkit kendi değerini üretip onu ezer ve broker rastgele porta bağlanır.
-        // Doğru yol: kafkaPorts(...) ile portu sabitlemek.
-        //
-        // ANCAK kafkaPorts(...) sadece broker'ın DİNLEDİĞİ portu sabitler. Başka bir
-        // process'ten (order-service) bağlanacaksak, broker'ın client'lara duyurduğu
-        // "advertised.listeners" adresini de elle sabitlemek gerekir; aksi halde external
-        // client geçerli broker node + controller bilgisini alamaz ve sonsuza kadar
-        // "Rebootstrapping ... controller = null, id = -1" döngüsüne girer.
+        // ÖNEMLİ: EmbeddedKafkaKraftBroker (KafkaClusterTestKit) broker portunu SABİTLEYEMEZ.
+        // - kafkaPorts(...) bu sürümde no-op'tur (JavaDoc'ta da yazar).
+        // - Tüm listener'lar her zaman "localhost:0" ile prebind edilir; gerçekte
+        //   PreboundSocketFactoryManager 'new InetSocketAddress(0)' kullanır, yani port her
+        //   açılışta rastgeledir. advertised.listeners'ı elle sabitlemek de işe yaramaz çünkü
+        //   broker fiziksel olarak o porta bind olmaz.
+        // Bu yüzden portu sabitlemek yerine: broker'ı ayağa kaldırıp testkit'in seçtiği
+        // GERÇEK adresi getBrokersAsString() ile okuyoruz ve bunu sabit bir HTTP endpoint'ten
+        // (KafkaBrokersController, port 8090) dışarı veriyoruz. order-service başlarken bu
+        // sabit adresten broker'ın o anki rastgele portunu öğrenir.
         EmbeddedKafkaKraftBroker broker =
-                new EmbeddedKafkaKraftBroker(1, 1, "orders", "payments")
-                        .kafkaPorts(29023);
-        // brokerProperty(...) interface tipini döndürdüğü için zincire ekleyemiyoruz; ayrı çağırıyoruz.
-        // ÖNEMLİ: KafkaClusterTestKit broker listener'ını "PLAINTEXT" değil "EXTERNAL" adıyla tanımlar
-        // (listener.security.protocol.map=EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT). Bu yüzden
-        // advertised.listeners'da listener adı olarak EXTERNAL kullanılmalı; PLAINTEXT yazılırsa
-        // "No security protocol defined for listener PLAINTEXT" hatasıyla broker açılmaz.
-        broker.brokerProperty("advertised.listeners", "EXTERNAL://127.0.0.1:29023");
-
+                new EmbeddedKafkaKraftBroker(1, 1, "order-topic", "orders", "payments");
         broker.afterPropertiesSet();
 
-        String brokers = "127.0.0.1:29023"; // client’ların göreceği adres
+        String brokers = broker.getBrokersAsString(); // testkit'in seçtiği gerçek (rastgele) adres
         System.setProperty("spring.embedded.kafka.brokers", brokers);
         env.getSystemProperties().put("spring.cloud.stream.kafka.binder.brokers", brokers);
 
-        System.out.println("Embedded Kafka Broker started " + brokers);
+        System.out.println("Embedded Kafka Broker started at " + brokers);
         return broker;
     }
 

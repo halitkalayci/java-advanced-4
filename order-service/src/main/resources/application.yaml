@@ -18,6 +18,9 @@ spring:
           content-type: application/json
       kafka:
         binder:
+          # Broker adresi runtime'da KafkaBrokerDiscoveryEnvironmentPostProcessor tarafından,
+          # embedded-servers'ın http://localhost:8090/kafka/brokers endpoint'inden keşfedilip
+          # set edilir (embedded broker portu sabitlenemediği için). Aşağıdaki yalnızca fallback.
           brokers: localhost:9094
         bindings:
           orderCreatedEvent-out-0:

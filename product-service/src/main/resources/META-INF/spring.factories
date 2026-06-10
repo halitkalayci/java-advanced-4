@@ -1,0 +1,4 @@
+# Spring Boot 4: EnvironmentPostProcessor arayüzü org.springframework.boot paketine taşındı.
+# Bu EPP, binder ayağa kalkmadan önce embedded broker'ın rastgele adresini keşfeder.
+org.springframework.boot.EnvironmentPostProcessor=\
+  com.turkcell.productservice.config.KafkaBrokerDiscoveryEnvironmentPostProcessor
