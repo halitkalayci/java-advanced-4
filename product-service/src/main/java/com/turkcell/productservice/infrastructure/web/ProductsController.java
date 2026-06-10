@@ -27,7 +27,6 @@ public class ProductsController {
         this.listProductUseCase = listProductUseCase;
     }
 
-
     @PostMapping
     public ResponseEntity<ProductId> create(@Valid @RequestBody CreateProductRequest request,
                                             UriComponentsBuilder uriBuilder)

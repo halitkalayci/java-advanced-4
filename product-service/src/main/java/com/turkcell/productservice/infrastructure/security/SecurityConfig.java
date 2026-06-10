@@ -22,7 +22,7 @@ public class SecurityConfig {
                   auth -> auth
                           .requestMatchers("/actuator/**","/swagger-ui/**","/v3/api-docs/**","/h2-console/**").permitAll()
                           .requestMatchers(HttpMethod.GET, "/api/v1/products/**").authenticated()
-                          .requestMatchers(HttpMethod.POST, "/api/v1/products/**").hasRole("ADMIN")
+                          .requestMatchers(HttpMethod.POST, "/api/v1/products/**").hasRole("admin") // role=ROLE_
                           .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 ->
