@@ -5,10 +5,10 @@ import com.turkcell.gateway.web.dto.BffLoginResponse;
 import com.turkcell.gateway.web.dto.LoginRequest;
 import com.turkcell.gateway.web.dto.UserInfo;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.server.ResponseStatusException;
@@ -41,6 +41,22 @@ public class AuthController
                     return new UserInfo("buraya_username_gelecek");
                 })
                 .onErrorMap(WebClientResponseException.class, this::relay);
+    }
+
+    @GetMapping("/me")
+    public Mono<ResponseEntity<UserInfo>> me(WebSession session)
+    {
+        String username = session.getAttribute(SessionKeys.USERNAME);
+        if(username==null)
+            return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+
+        return Mono.just(ResponseEntity.ok(new UserInfo(username)));
+    }
+
+    @PostMapping("/logout")
+    public Mono<ResponseEntity<Void>> logout(WebSession session)
+    {
+        return session.invalidate().thenReturn(ResponseEntity.noContent().build());
     }
 
     private Throwable relay(WebClientResponseException ex)
