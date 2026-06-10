@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: bff
+server:
+  port: 8086
