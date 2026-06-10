@@ -9,6 +9,8 @@ import com.turkcell.orderservice.repository.OutboxMessageRepository;
 import jakarta.transaction.Transactional;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,10 +36,14 @@ public class OrdersController {
 
     @PostMapping
     @Transactional // İlgili fonksiyonun içerisinde outboxTable'a veri yazma işlemi varsa kesinlike @Transactional olmalı.
-    public ResponseEntity<String> create() {
+    public ResponseEntity<String> create(@AuthenticationPrincipal Jwt jwt) {
+
+        UUID userId = UUID.fromString(jwt.getSubject());
+
         Order order = new Order();
         order.setOrderDate(Instant.now());
         order.setTotalAmount(BigDecimal.valueOf(1203));
+        order.setUserId(userId);
         orderRepository.save(order);
 
         OrderCreatedEvent orderCreatedEvent = new OrderCreatedEvent(

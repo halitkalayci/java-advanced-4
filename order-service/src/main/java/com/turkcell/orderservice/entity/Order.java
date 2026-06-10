@@ -17,7 +17,17 @@ public class Order {
     private UUID id;
     private Instant orderDate;
     private BigDecimal totalAmount;
+    private UUID userId;
 
+
+
+    public UUID userId() {
+        return userId;
+    }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
+    }
 
     public UUID id() {
         return id;
