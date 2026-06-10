@@ -25,7 +25,7 @@ spring:
           content-type: application/json
           group: product-group
           consumer:
-            max-attempts: 5
+            max-attempts: 10
             back-off-initial-interval: 1000
             back-off-multiplier: 2.0
             back-off-max-interval: 30000
