@@ -4,7 +4,12 @@ import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.cloud.gateway.route.RouteLocator;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.List;
 
 @Configuration
 public class GatewayConfig {
@@ -21,5 +26,19 @@ public class GatewayConfig {
     public WebClient bffClient()
     {
         return WebClient.builder().baseUrl("http://localhost:8086").build();
+    }
+
+    @Bean
+    public CorsWebFilter corsWebFilter()
+    {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(List.of("*"));
+        config.setAllowedMethods(List.of("*"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return new CorsWebFilter(source);
     }
 }

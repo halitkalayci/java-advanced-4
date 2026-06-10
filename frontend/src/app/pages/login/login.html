@@ -1,0 +1,28 @@
+<div class="auth-wrap">
+  <form class="card" (ngSubmit)="submit()">
+    <h1>Giriş Yap</h1>
+    <p class="sub">SmartOrder hesabınla devam et</p>
+
+    @if (error()) {
+      <div class="error">{{ error() }}</div>
+    }
+
+    <div class="field">
+      <label for="username">Kullanıcı adı</label>
+      <input id="username" name="username" [(ngModel)]="username" autocomplete="username" required />
+    </div>
+
+    <div class="field">
+      <label for="password">Şifre</label>
+      <input id="password" name="password" type="password" [(ngModel)]="password" autocomplete="current-password" required />
+    </div>
+
+    <button class="primary" type="submit" [disabled]="loading()">
+      {{ loading() ? 'Giriş yapılıyor…' : 'Giriş Yap' }}
+    </button>
+
+    <div class="switch">
+      Hesabın yok mu? <a routerLink="/register">Kayıt ol</a>
+    </div>
+  </form>
+</div>
