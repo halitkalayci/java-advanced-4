@@ -1,0 +1,61 @@
+{
+  "realm": "smartorder",
+  "enabled": true,
+  "sslRequired": "none",
+  "roles": {
+    "realm": [
+      { "name": "admin", "description": "Urun yazabilir" },
+      { "name": "user",  "description": "Sadece okuyabilir" }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "smartorder-public",
+      "enabled": true,
+      "publicClient": true,
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": true,
+      "redirectUris": ["*"],
+      "webOrigins": ["*"],
+      "protocol": "openid-connect"
+    },
+    {
+      "clientId": "smartorder-bff",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "bff-secret-degistir",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "redirectUris": ["http://localhost:8088/login/oauth2/code/keycloak"],
+      "webOrigins": ["http://localhost:8088"],
+      "attributes": {
+        "post.logout.redirect.uris": "http://localhost:8088/"
+      },
+      "protocol": "openid-connect"
+    }
+  ],
+  "users": [
+    {
+      "username": "alice",
+      "enabled": true,
+      "email": "alice@smartorder.dev",
+      "firstName": "Alice",
+      "lastName": "Admin",
+      "credentials": [
+        { "type": "password", "value": "12345", "temporary": false }
+      ],
+      "realmRoles": ["admin"]
+    },
+    {
+      "username": "bob",
+      "enabled": true,
+      "email": "bob@smartorder.dev",
+      "firstName": "Bob",
+      "lastName": "User",
+      "credentials": [
+        { "type": "password", "value": "12345", "temporary": false }
+      ],
+      "realmRoles": ["user"]
+    }
+  ]
+}

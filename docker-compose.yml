@@ -48,6 +48,29 @@ services:
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: "kafka:9092"
     networks:
       - kafkanet
+
+  # ====== KEYCLOAK (Identity / Authorization Server) ======
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.1
+    container_name: keycloak
+    restart: unless-stopped
+    command: start-dev --import-realm
+    environment:
+      # Keycloak 26 ile admin değişkenleri yeniden adlandırıldı:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      # Dev modunda hostname doğrulamasını gevşet (localhost'tan erişim için)
+      KC_HOSTNAME_STRICT: "false"
+      KC_HTTP_ENABLED: "true"
+    ports:
+      # host:container → product-service de 8080 kullandığı için host portu 8085
+      - "8085:8080"
+    volumes:
+      # Realm'i her başlangıçta otomatik import et (tekrar üretilebilir kurulum)
+      - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
+    networks:
+      - kafkanet
+
 volumes:
   kafka-data:
 
