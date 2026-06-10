@@ -6,6 +6,7 @@ import com.turkcell.orderservice.entity.OutboxStatus;
 import com.turkcell.orderservice.event.OrderCreatedEvent;
 import com.turkcell.orderservice.repository.OrderRepository;
 import com.turkcell.orderservice.repository.OutboxMessageRepository;
+import jakarta.transaction.Transactional;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,6 +33,7 @@ public class OrdersController {
 
 
     @PostMapping
+    @Transactional // İlgili fonksiyonun içerisinde outboxTable'a veri yazma işlemi varsa kesinlike @Transactional olmalı.
     public ResponseEntity<String> create() {
         Order order = new Order();
         order.setOrderDate(Instant.now());
@@ -45,6 +47,9 @@ public class OrdersController {
                 order.totalAmount()
         );
 
+        // Direkt Kafkaya Göndermek... -> YANLIŞ
+
+        // KAFKAYA gönderilecek eventi persiste et.
         OutboxMessage outboxMessage = new OutboxMessage();
         outboxMessage.setId(UUID.randomUUID());
         outboxMessage.setAggregateType(Order.class.getSimpleName());

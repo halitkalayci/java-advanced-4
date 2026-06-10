@@ -4,9 +4,12 @@ import com.turkcell.orderservice.entity.OutboxMessage;
 import com.turkcell.orderservice.entity.OutboxStatus;
 import com.turkcell.orderservice.repository.OutboxMessageRepository;
 import org.springframework.cloud.stream.function.StreamBridge;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.List;
 import java.util.Set;
@@ -15,6 +18,7 @@ import java.util.Set;
 public class OutboxPoller {
     private final OutboxMessageRepository outboxMessageRepository;
     private final StreamBridge streamBridge;
+    private static final int MAX_RETRY = 5;
 
     public OutboxPoller(OutboxMessageRepository outboxMessageRepository, StreamBridge streamBridge) {
         this.outboxMessageRepository = outboxMessageRepository;
@@ -28,14 +32,17 @@ public class OutboxPoller {
         for(OutboxMessage event: events)
         {
             try{
-                // OrderCreatedEvent-out-0 ->
-                // order-topic
-                // {"id":"395087ec-07a5-49ed-813f-0c4d16f87685","orderDate":"2026-06-09T11:34:24.960878100Z","totalAmount":1203}
-                streamBridge.send(event.eventType() + "-out-0", event.payload());
+                streamBridge.send(event.eventType() + "-out-0",
+                        MessageBuilder.withPayload(event.payload())
+                                .setHeader(KafkaHeaders.KEY, event.id().toString().getBytes(StandardCharsets.UTF_8))
+                                .build()
+                );
+
+
                 event.setOutboxStatus(OutboxStatus.SENT);
             } catch(Exception e)
             {
-                if(event.retryCount() >= 5)
+                if(event.retryCount() + 1 >- MAX_RETRY)
                 {
                     event.setErrorMessage(e.getMessage());
                     event.setOutboxStatus(OutboxStatus.FAILED);
