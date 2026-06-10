@@ -1,4 +1,9 @@
 spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8085/realms/smartorder
   application:
     name: product-service
   datasource:
@@ -26,9 +31,6 @@ spring:
             back-off-max-interval: 30000
       kafka:
         binder:
-          # Broker adresi runtime'da KafkaBrokerDiscoveryEnvironmentPostProcessor tarafından,
-          # embedded-servers'ın http://localhost:8090/kafka/brokers endpoint'inden keşfedilip
-          # set edilir (embedded broker portu sabitlenemediği için). Aşağıdaki yalnızca fallback.
           brokers: localhost:9094
         bindings:
           orderCreatedEvent-in-0:
