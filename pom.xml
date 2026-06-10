@@ -17,6 +17,7 @@
         <module>product-service</module>
         <module>embedded-servers</module>
         <module>order-service</module>
+        <module>gateway</module>
     </modules>
 
     <properties>
